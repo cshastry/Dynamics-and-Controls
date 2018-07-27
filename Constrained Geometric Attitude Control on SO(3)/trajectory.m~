@@ -1,0 +1,17 @@
+function [ Rd,omegad ] = trajectory( t )
+%TRAJECTORY Summary of this function goes here
+%   Detailed explanation goes here
+if t<4
+    
+    Rd = eye(3);
+    omegad = [0 0 0].';
+    
+else
+    
+    Rd = expm(225*pi/180*hat([0 0 1].'));
+    omegad = [0 0 0].';
+    
+end
+
+end
+

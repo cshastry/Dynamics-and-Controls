@@ -1,0 +1,42 @@
+function  tau  = controller( R,omega,Rd,omegad,W,params )
+%CONTROLLER Summary of this function goes here
+%   Detailed explanation goes here
+
+% if det(R)<0
+%     norm(det(R))
+%     det(R)
+%     R
+%     error('rotation')
+% end 
+
+A = (1/2)*trace(params.G*(eye(3) - Rd.'*R));                                                                % Attractive Potential
+e_RA = (1/2)*inv_hat(params.G*Rd.'*R - R.'*Rd*params.G);                                                    % Attractive Error
+
+% Generating repulsive potentials and errors corresponding to i constraints
+
+B = zeros(length(params.theta),1);
+e_RB = zeros(3,length(params.theta));
+
+for i = 1:length(params.theta)
+    
+    % Repulsive Potential for each debris vector
+    B(i) = 1 - (1/params.alpha)*log((cos(params.theta(i)) - (params.r).'*R.'*(params.v(:,i)))/(1 + cos(params.theta(i)))); 
+    
+    % Repulsive error related to each debris vector
+    e_RB(:,i) = hat(R.'*(params.v(:,i)))*params.r/(params.alpha*(params.r.'*R.'*(params.v(:,i)) - cos(params.theta(i))));
+
+end
+
+e_R = e_RA * sum(B) + e_RB * (A * ones(length(params.theta),1));                                       % Rotation error vector
+e_omega = omega;% - R.'*Rd*omegad;                                                                % Angular Velocity error vector
+
+%Parameter Estimation
+delta_cap = params.kdelta*W.'*(e_omega + params.c*e_R);
+
+tau = -params.kR*e_R - params.komega*e_omega + cross(omega,params.inertia*omega) - W*delta_cap;   % Input Moments
+
+
+
+
+end
+

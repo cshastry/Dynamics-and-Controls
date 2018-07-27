@@ -1,0 +1,34 @@
+clearvars
+close all
+format compact
+
+C = {'k','b','r','g','y',[.5 .6 .7],[.8 .2 .6]}; % Cell array of colros.
+
+% rng(17);% set a seed
+num_faces = 20;
+closed = 0;
+draw_edges = 1;
+
+figure
+hold on
+axis equal
+set(gca, 'Projection', 'orthographic');
+
+for i = 1:5
+    radius = rand(1);
+    % get two end points
+    end_pts = rand(2,3);
+    % draw the cone
+    Cone(end_pts(1,:), end_pts(2,:),[0, radius], ...
+        20, C{mod(i,7)+1},closed, draw_edges)
+    alpha(0.3)
+end
+
+Desired_axes{i} = rand(3,3);
+    xaxis_des = line([0 Desired_axes{i}(1,1)],[0 Desired_axes{i}(2,1)],[0 Desired_axes{i}(3,1)],'Color','blue','LineStyle','-','MarkerSize',10); 
+    yaxis_des = line([0 Desired_axes{i}(1,2)],[0 Desired_axes{i}(2,2)],[0 Desired_axes{i}(3,i)],'Color','blue','LineStyle','-','MarkerSize',10);
+    zaxis_des = line([0 Desired_axes{i}(7,i)],[0 Desired_axes{i}(8,i)],[0 Desired_axes{i}(9,i)],'Color','blue','LineStyle','-','MarkerSize',10);
+    
+    x_label = text(Desired_axes{i}(1,i),Desired_axes{i}(2,i),Desired_axes{i}(3,i),'X','FontSize',14,'Color','black');
+    y_label = text(Desired_axes{i}(4,i),Desired_axes{i}(5,i),Desired_axes{i}(6,i),'Y','FontSize',14,'Color','black');
+    z_label = text(Desired_axes{i}(7,i),Desired_axes{i}(8,i),Desired_axes{i}(9,i),'Z','FontSize',14,'Color','black');
